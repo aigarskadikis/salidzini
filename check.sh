@@ -255,7 +255,7 @@ filename=$(echo "$item" | sed "s/ /\./g")
 if [ -f $data/$filename.txt ]; then
 
 #calculate if the prise is lower
-if [ $price -ge `cat $data/$filename.txt` ]; then
+if [ $price -ge 83.90 ]; then
 echo price has not been changed
 else
 echo the price is getting better
