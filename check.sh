@@ -255,18 +255,19 @@ filename=$(echo "$item" | sed "s/ /\./g")
 if [ -f $data/$filename.txt ]; then
 
 	#calculate if the prise is lower
-	grep "$price" $data/$filename.txt
+	tail -1 $data/$filename.txt | grep "$price"
 	if [ $? -eq 0 ]; then
 		echo price has not been changed
 	else
 		echo new price detected. now $item price is $price
 		echo
 		echo setting item into database..
-		echo $price> $data/$filename.txt
+		DATE=$(date +%Y-%m-%d:%H:%M:%S)
+		echo $DATE $price>> $data/$filename.txt
 		emails=$(cat ../maintenance | sed '$aend of file')
 		printf %s "$emails" | while IFS= read -r onemail
 		do {
-		python ../send-email.py "$onemail" "$item lowest price" "$fullpricename"
+		python ../send-email.py "$onemail" "$item lowest price" "`cat $data/$filename.txt`"
 		} done
 	fi
 
