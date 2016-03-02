@@ -238,11 +238,12 @@ samsung microsd evo 8gb
 samsung microsd evo 16gb
 samsung microsd evo 32gb
 samsung microsd evo 64gb
+samsung microsd evo plus 64gb
 samsung microsd evo 128gb
+samsung microsd evo plus 128gb
 extra line
 EOF
 )
-
 
 printf %s "$itemlist" | while IFS= read -r item
 do {
@@ -254,6 +255,9 @@ grep -A1 -m1 "item_price" | \
 grep -v "item_price" | \
 sed "s/&nbsp;/ /g;s/[<>]/\n/g" | \
 grep -i "eur")
+
+echo "$fullpricename" | grep -i "eur"
+if [ $? -eq 0 ]; then
 
 price=$(echo "$fullpricename" | sed "s/ .*$//g")
 filename=$(echo "$item" | sed "s/ /\./g")
@@ -287,9 +291,16 @@ else
 
 fi
 
+else
+echo $item are no longer on market
+emails=$(cat ../maintenance | sed '$aend of file')
+printf %s "$emails" | while IFS= read -r onemail
+do {
+python ../send-email.py "$onemail" "$item are no longer on market" "`cat $data/$filename.txt`"
 } done
+fi
 
-
+} done
 
 
 #clean and remove whole temp direcotry
