@@ -292,6 +292,12 @@ else
 fi
 
 else
+
+#if item never has audited and do not exist today, then need to create database
+if [ ! -f "$data/$filename.txt" ]; then
+  touch "$data/$filename.txt"
+fi
+
 echo $item are no longer on market
 tail -1 $data/$filename.txt | grep "no longer on market"
 if [ $? -ne 0 ]; then
