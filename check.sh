@@ -235,6 +235,10 @@ raspberry pi 3 1 gb
 htc nexus 9 32gb
 htc nexus 9 16gb
 samsung microsd evo 8gb
+samsung microsd evo 16gb
+samsung microsd evo 32gb
+samsung microsd evo 64gb
+samsung microsd evo 128gb
 extra line
 EOF
 )
