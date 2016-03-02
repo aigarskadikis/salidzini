@@ -261,7 +261,7 @@ if [ -f $data/$filename.txt ]; then
 	#calculate if the prise is lower
 	tail -1 $data/$filename.txt | grep "$price"
 	if [ $? -eq 0 ]; then
-		echo price has not been changed
+		echo $item price has not been changed
 		echo
 	else
 		echo now $item price is $price
