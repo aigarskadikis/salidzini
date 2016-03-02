@@ -252,7 +252,7 @@ grep -i "eur")
 
 price=$(echo "$fullpricename" | sed "s/ .*$//g")
 filename=$(echo "$item" | sed "s/ /\./g")
-DATE=$(date +%Y/%m/%d %H:%M:%S)
+DATE=$(date "+%Y/%m/%d %H:%M")
 
 #if the price has been already in log
 if [ -f $data/$filename.txt ]; then
