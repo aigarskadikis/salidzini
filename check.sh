@@ -221,6 +221,9 @@ fi
 
 itemlist=$(cat <<EOF
 samsung evo 850 250gb
+samsung evo 850 500gb
+raspberry pi 2 1 gb
+raspberry pi 3 1 gb
 extra line
 EOF
 )
