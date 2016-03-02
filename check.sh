@@ -108,6 +108,14 @@ if [ ! -d "$tmp" ]; then
   mkdir -p "$tmp"
 fi
 
+#set data directory in variable based on application name
+data=$(echo ../data/$appname)
+
+#create data directory
+if [ ! -d "$data" ]; then
+  mkdir -p "$data"
+fi
+
 #check if database directory has prepared 
 if [ ! -d "../db" ]; then
   mkdir -p "../db"
@@ -241,8 +249,27 @@ sed "s/&nbsp;/ /g;s/[<>]/\n/g" | \
 grep -i "eur")
 
 price=$(echo "$fullpricename" | sed "s/ .*$//g")
+filename=$(echo "$item" | sed "s/ /\./g")
+
+#if the price has been already in log
+if [ -f $data/$filename.txt ]; then
+
+#calculate if the prise is lower
+if [ $price -ge `cat $data/$filename.txt` ]; then
+echo price has not been changed
+else
+echo the price is getting better
+fi
+
+else
 
 echo $item lowest price is $price
+echo
+
+echo setting item into database..
+echo $price> $data/$filename.txt
+
+fi
 
 } done
 
