@@ -232,6 +232,8 @@ samsung evo 850 250gb
 samsung evo 850 500gb
 raspberry pi 2 1 gb
 raspberry pi 3 1 gb
+htc nexus 9 32gb
+htc nexus 9 16gb
 extra line
 EOF
 )
@@ -250,6 +252,7 @@ grep -i "eur")
 
 price=$(echo "$fullpricename" | sed "s/ .*$//g")
 filename=$(echo "$item" | sed "s/ /\./g")
+DATE=$(date +%Y/%m/%d %H:%M:%S)
 
 #if the price has been already in log
 if [ -f $data/$filename.txt ]; then
@@ -262,7 +265,6 @@ if [ -f $data/$filename.txt ]; then
 		echo new price detected. now $item price is $price
 		echo
 		echo setting item into database..
-		DATE=$(date +%Y-%m-%d:%H:%M:%S)
 		echo $DATE $price>> $data/$filename.txt
 		emails=$(cat ../maintenance | sed '$aend of file')
 		printf %s "$emails" | while IFS= read -r onemail
@@ -275,7 +277,7 @@ else
 	echo now $item lowest price is $price
 	echo
 	echo setting item into database..
-	echo $price> $data/$filename.txt
+	echo $DATE $price> $data/$filename.txt
 
 fi
 
