@@ -308,7 +308,7 @@ do {
 python ../send-email.py "$onemail" "$item are no longer on market" "`cat $data/$filename.txt`"
 } done
 else
-echo $item are no longer on market
+echo the email will be sended if the item goes up again
 fi
 echo
 
