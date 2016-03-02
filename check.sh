@@ -310,6 +310,7 @@ python ../send-email.py "$onemail" "$item are no longer on market" "`cat $data/$
 else
 echo $item are no longer on market
 fi
+echo
 
 fi
 
