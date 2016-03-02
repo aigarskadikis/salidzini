@@ -263,7 +263,6 @@ if [ -f $data/$filename.txt ]; then
 		echo price has not been changed
 	else
 		echo new price detected. now $item price is $price
-		echo
 		echo setting item into database..
 		echo $DATE $fullpricename>> $data/$filename.txt
 		emails=$(cat ../maintenance | sed '$aend of file')
@@ -271,13 +270,14 @@ if [ -f $data/$filename.txt ]; then
 		do {
 		python ../send-email.py "$onemail" "$item price" "`cat $data/$filename.txt`"
 		} done
+		echo
 	fi
 
 else
 	echo now $item price is $price
-	echo
 	echo setting item into database..
 	echo $DATE $fullpricename> $data/$filename.txt
+	echo
 
 fi
 
