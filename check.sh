@@ -220,7 +220,7 @@ fi
 fi
 
 itemlist=$(cat <<EOF
-samsung+evo+850+250gb
+samsung evo 850 250gb
 extra line
 EOF
 )
@@ -229,7 +229,7 @@ EOF
 printf %s "$itemlist" | while IFS= read -r item
 do {
 
-fullpricename=$(wget -qO- "https://www.salidzini.lv/search.php?q=$item" | \
+fullpricename=$(wget -qO- "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`" | \
 sed "s/<div/\n<div/g;s/<\/div/\n<\/div/g" | \
 grep "^<" | \
 grep -A1 -m1 "item_price" | \
@@ -239,7 +239,7 @@ grep -i "eur")
 
 price=$(echo "$fullpricename" | sed "s/ .*$//g")
 
-echo lowest price is $price
+echo $item lowest price is $price
 
 } done
 
