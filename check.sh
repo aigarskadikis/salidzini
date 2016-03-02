@@ -254,22 +254,27 @@ filename=$(echo "$item" | sed "s/ /\./g")
 #if the price has been already in log
 if [ -f $data/$filename.txt ]; then
 
-#calculate if the prise is lower
-grep "$price" $data/$filename.txt
-if [ $? -eq 0 ]; then
-echo price has not been changed
-else
-echo new price detected. now $item price is $price
-echo
-echo setting item into database..
-echo $price> $data/$filename.txt
-fi
+	#calculate if the prise is lower
+	grep "$price" $data/$filename.txt
+	if [ $? -eq 0 ]; then
+		echo price has not been changed
+	else
+		echo new price detected. now $item price is $price
+		echo
+		echo setting item into database..
+		echo $price> $data/$filename.txt
+		emails=$(cat ../maintenance | sed '$aend of file')
+		printf %s "$emails" | while IFS= read -r onemail
+		do {
+		python ../send-email.py "$onemail" "$item lowest price" "$fullpricename"
+		} done
+	fi
 
 else
-echo now $item lowest price is $price
-echo
-echo setting item into database..
-echo $price> $data/$filename.txt
+	echo now $item lowest price is $price
+	echo
+	echo setting item into database..
+	echo $price> $data/$filename.txt
 
 fi
 
