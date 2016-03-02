@@ -256,12 +256,12 @@ grep -v "item_price" | \
 sed "s/&nbsp;/ /g;s/[<>]/\n/g" | \
 grep -i "eur")
 
-echo "$fullpricename" | grep -i "eur"
-if [ $? -eq 0 ]; then
-
 price=$(echo "$fullpricename" | sed "s/ .*$//g")
 filename=$(echo "$item" | sed "s/ /\./g")
 DATE=$(date "+%Y/%m/%d %H:%M")
+
+echo "$fullpricename" | grep -i "eur"
+if [ $? -eq 0 ]; then
 
 #if the price has been already in log
 if [ -f $data/$filename.txt ]; then
@@ -293,11 +293,18 @@ fi
 
 else
 echo $item are no longer on market
+tail -1 $data/$filename.txt | grep "no longer on market"
+if [ $? -ne 0 ]; then
+echo $DATE no longer on market>> $data/$filename.txt
 emails=$(cat ../maintenance | sed '$aend of file')
 printf %s "$emails" | while IFS= read -r onemail
 do {
 python ../send-email.py "$onemail" "$item are no longer on market" "`cat $data/$filename.txt`"
 } done
+else
+echo $item are no longer on market
+fi
+
 fi
 
 } done
