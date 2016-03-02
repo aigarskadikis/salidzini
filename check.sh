@@ -255,17 +255,19 @@ filename=$(echo "$item" | sed "s/ /\./g")
 if [ -f $data/$filename.txt ]; then
 
 #calculate if the prise is lower
-if [ $price -ge 83.90 ]; then
+grep "$price" $data/$filename.txt
+if [ $? -eq 0 ]; then
 echo price has not been changed
 else
-echo the price is getting better
+echo new price detected. now $item price is $price
+echo
+echo setting item into database..
+echo $price> $data/$filename.txt
 fi
 
 else
-
-echo $item lowest price is $price
+echo now $item lowest price is $price
 echo
-
 echo setting item into database..
 echo $price> $data/$filename.txt
 
