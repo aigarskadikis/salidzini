@@ -234,6 +234,7 @@ raspberry pi 2 1 gb
 raspberry pi 3 1 gb
 htc nexus 9 32gb
 htc nexus 9 16gb
+samsung microsd evo 8gb
 extra line
 EOF
 )
@@ -261,8 +262,9 @@ if [ -f $data/$filename.txt ]; then
 	tail -1 $data/$filename.txt | grep "$price"
 	if [ $? -eq 0 ]; then
 		echo price has not been changed
+		echo
 	else
-		echo new price detected. now $item price is $price
+		echo now $item price is $price
 		echo setting item into database..
 		echo $DATE $fullpricename>> $data/$filename.txt
 		emails=$(cat ../maintenance | sed '$aend of file')
