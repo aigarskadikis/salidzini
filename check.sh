@@ -265,19 +265,19 @@ if [ -f $data/$filename.txt ]; then
 		echo new price detected. now $item price is $price
 		echo
 		echo setting item into database..
-		echo $DATE $price>> $data/$filename.txt
+		echo $DATE $fullpricename>> $data/$filename.txt
 		emails=$(cat ../maintenance | sed '$aend of file')
 		printf %s "$emails" | while IFS= read -r onemail
 		do {
-		python ../send-email.py "$onemail" "$item lowest price" "`cat $data/$filename.txt`"
+		python ../send-email.py "$onemail" "$item price" "`cat $data/$filename.txt`"
 		} done
 	fi
 
 else
-	echo now $item lowest price is $price
+	echo now $item price is $price
 	echo
 	echo setting item into database..
-	echo $DATE $price> $data/$filename.txt
+	echo $DATE $fullpricename> $data/$filename.txt
 
 fi
 
