@@ -167,7 +167,7 @@ return
 else
 #list all python installed modules
 #check if google-api-python-client is really installed
-pip freeze | grep "google-api-python-client" > /dev/null
+/usr/local/bin/pip freeze | grep "google-api-python-client" > /dev/null
 if [ $? -ne 0 ]
 then
 echo google-api-python-client python module not installed. Please run:
@@ -175,7 +175,7 @@ echo sudo pip install --upgrade google-api-python-client
 return
 fi
 #chech again if all necesary modules are installed to work with google uploder then download upload script:
-pip freeze | grep "google-api-python-client" > /dev/null
+/usr/local/bin/pip freeze | grep "google-api-python-client" > /dev/null
 if [ $? -eq 0 ]
 then
 #if every necessary software and module is installed then download uploader script and sample config file
@@ -228,8 +228,8 @@ fi
 fi
 
 itemlist=$(cat <<EOF
-samsung evo 850 250gb
-samsung evo 850 500gb
+samsung evo 850 250gb -msata
+samsung evo 850 500gb -msata
 raspberry pi 2 1 gb
 raspberry pi 3 1 gb
 htc nexus 9 32gb
@@ -241,6 +241,15 @@ samsung microsd evo 64gb
 samsung microsd evo plus 64gb
 samsung microsd evo 128gb
 samsung microsd evo plus 128gb
+zbox nano ci323
+zbox nano ci321
+2x8gb 1600Mhz sodimm ddr3l
+indesit dif16b1aeu
+playstation 4 console 500gb
+philips 40pft4200
+samsung ue-40j5100
+asrock beebox n3000
+asus z580ca
 extra line
 EOF
 )
@@ -278,7 +287,9 @@ if [ -f $data/$filename.txt ]; then
 		emails=$(cat ../maintenance | sed '$aend of file')
 		printf %s "$emails" | while IFS= read -r onemail
 		do {
-		python ../send-email.py "$onemail" "$item price" "`cat $data/$filename.txt`"
+		python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
+
+`cat $data/$filename.txt`"
 		} done
 		echo
 	fi
@@ -305,7 +316,9 @@ echo $DATE no longer on market>> $data/$filename.txt
 emails=$(cat ../maintenance | sed '$aend of file')
 printf %s "$emails" | while IFS= read -r onemail
 do {
-python ../send-email.py "$onemail" "$item are no longer on market" "`cat $data/$filename.txt`"
+python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
+
+`cat $data/$filename.txt`"
 } done
 else
 echo the email will be sended if the item goes up again
