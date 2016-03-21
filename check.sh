@@ -137,7 +137,8 @@ do {
 				fi
 			
 			else
-				echo $item price has not changed and that is $price 
+				echo $item price has not changed and that is $price
+				echo
 			fi
 
 		else
