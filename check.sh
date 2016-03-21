@@ -115,7 +115,7 @@ do {
 			equal=$(awk 'BEGIN{ print "'$lowestprice'"=="'$price'" }')
 
 			#if item prise is not equal to the database then do the compare
-			if [ "$equal" -ne 0 ]; then
+			if [ "$equal" -ne 1 ]; then
 
 				#check if the price in database is still the lowest ever
 				var=$(awk 'BEGIN{ print "'$lowestprice'"<"'$price'" }')
