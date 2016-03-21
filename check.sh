@@ -93,65 +93,69 @@ EOF
 printf %s "$itemlist" | while IFS= read -r item
 do {
 
-fullpricename=$(wget -qO- "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`" | \
-sed "s/<div/\n<div/g;s/<\/div/\n<\/div/g" | \
-grep "^<" | \
-grep -A1 -m1 "item_price" | \
-grep -v "item_price" | \
-sed "s/&nbsp;/ /g;s/[<>]/\n/g" | \
-grep -i "eur")
+	fullpricename=$(wget -qO- "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`" | \
+	sed "s/<div/\n<div/g;s/<\/div/\n<\/div/g" | \
+	grep "^<" | \
+	grep -A1 -m1 "item_price" | \
+	grep -v "item_price" | \
+	sed "s/&nbsp;/ /g;s/[<>]/\n/g" | \
+	grep -i "eur")
 
-price=$(echo "$fullpricename" | sed "s/ .*$//g")
-filename=$(echo "$item" | sed "s/ /\./g")
-DATE=$(date "+%Y/%m/%d %H:%M")
+	price=$(echo "$fullpricename" | sed "s/ .*$//g")
+	filename=$(echo "$item" | sed "s/ /\./g")
+	DATE=$(date "+%Y/%m/%d %H:%M")
 
 
-echo "$fullpricename" | grep -i "eur"
-if [ $? -eq 0 ]; then
+	echo "$fullpricename" | grep -i "eur"
+	if [ $? -eq 0 ]; then
 
-#if the price has been already in log
-if [ -f $data/$filename.txt ]; then
+		#if the price has been already in log
+		if [ -f $data/$filename.txt ]; then
+			lowestprice=$(tail -1 | sed "s/ eur//i;s/^.*\s//g")
+			equal=$(awk 'BEGIN{ print "'$lowestprice'"="'$price'" }')
 
-lowestprice=$(tail -1 | sed "s/ eur//i;s/^.*\s//g")
+			#if item prise is not equal to the database then do the compare
+			if [ "$equal" -ne 0 ]; then
 
-var=$(awk 'BEGIN{ print "'$lowestprice'"<"'$price'" }')
+				#check if the price in database is still the lowest ever
+				var=$(awk 'BEGIN{ print "'$lowestprice'"<"'$price'" }')
+				
+				if [ "$var" -eq 1 ]; then
+					echo $item price has not been changed
+					echo
+				else
+					echo now $item price is $price
+					echo setting item into database..
+					echo $DATE $fullpricename>> $data/$filename.txt
+					emails=$(cat ../maintenance | sed '$aend of file')
+					printf %s "$emails" | while IFS= read -r onemail
+					do {
+					python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
+					`cat $data/$filename.txt`"
+					} done
+					echo
+				fi
+			
+			else
+				echo $item price has not changed and that is $price 
+			fi
 
-if [ "$var" -eq 1 ]; then
-		echo $item price has not been changed
-		echo
+		else
+			echo now $item price is $price
+			echo setting item into database..
+			echo $DATE $fullpricename> $data/$filename.txt
+			echo
+		fi
+
 	else
-		echo now $item price is $price
-		echo setting item into database..
-		echo $DATE $fullpricename>> $data/$filename.txt
-		emails=$(cat ../maintenance | sed '$aend of file')
-		printf %s "$emails" | while IFS= read -r onemail
-		do {
-		python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
 
-`cat $data/$filename.txt`"
-		} done
+		#if item never has audited and do not exist today, then need to create database
+		if [ ! -f "$data/$filename.txt" ]; then
+		  touch "$data/$filename.txt"
+		fi
+		echo $item are no longer on market
 		echo
 	fi
-
-else
-	echo now $item price is $price
-	echo setting item into database..
-	echo $DATE $fullpricename> $data/$filename.txt
-	echo
-
-fi
-
-else
-
-#if item never has audited and do not exist today, then need to create database
-if [ ! -f "$data/$filename.txt" ]; then
-  touch "$data/$filename.txt"
-fi
-
-echo $item are no longer on market
-echo
-
-fi
 
 } done
 
