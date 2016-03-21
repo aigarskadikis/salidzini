@@ -112,7 +112,7 @@ do {
 		#if the price has been already in log
 		if [ -f $data/$filename.txt ]; then
 			lowestprice=$(tail -1 | sed "s/ eur//i;s/^.*\s//g")
-			equal=$(awk 'BEGIN{ print "'$lowestprice'"="'$price'" }')
+			equal=$(awk 'BEGIN{ print "'$lowestprice'"=="'$price'" }')
 
 			#if item prise is not equal to the database then do the compare
 			if [ "$equal" -ne 0 ]; then
