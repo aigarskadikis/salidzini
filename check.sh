@@ -105,15 +105,18 @@ price=$(echo "$fullpricename" | sed "s/ .*$//g")
 filename=$(echo "$item" | sed "s/ /\./g")
 DATE=$(date "+%Y/%m/%d %H:%M")
 
+
 echo "$fullpricename" | grep -i "eur"
 if [ $? -eq 0 ]; then
 
 #if the price has been already in log
 if [ -f $data/$filename.txt ]; then
 
-	#calculate if the prise is lower
-	tail -1 $data/$filename.txt | grep "$price"
-	if [ $? -eq 0 ]; then
+lowestprice=$(tail -1 | sed "s/ eur//i;s/^.*\s//g")
+
+var=$(awk 'BEGIN{ print "'$lowestprice'"<"'$price'" }')
+
+if [ "$var" -eq 1 ]; then
 		echo $item price has not been changed
 		echo
 	else
@@ -146,19 +149,6 @@ if [ ! -f "$data/$filename.txt" ]; then
 fi
 
 echo $item are no longer on market
-tail -1 $data/$filename.txt | grep "no longer on market"
-if [ $? -ne 0 ]; then
-echo $DATE no longer on market>> $data/$filename.txt
-emails=$(cat ../maintenance | sed '$aend of file')
-printf %s "$emails" | while IFS= read -r onemail
-do {
-python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
-
-`cat $data/$filename.txt`"
-} done
-else
-echo the email will be sended if the item goes up again
-fi
 echo
 
 fi
