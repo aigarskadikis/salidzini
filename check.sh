@@ -65,8 +65,8 @@ fi
 itemlist=$(cat <<EOF
 samsung evo 850 250gb -msata
 samsung evo 850 500gb -msata
-raspberry pi 2 1 gb
-raspberry pi 3 1 gb
+raspberry pi 2 1gb
+raspberry pi 3 1gb
 htc nexus 9 32gb
 htc nexus 9 16gb
 samsung microsd evo 8gb
@@ -85,6 +85,7 @@ philips 40pft4200
 samsung ue-40j5100
 asrock beebox n3000
 asus z580ca
+acme ch12
 extra line
 EOF
 )
