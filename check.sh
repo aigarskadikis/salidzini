@@ -88,6 +88,8 @@ asus z580ca 32gb
 asus z580ca 64gb
 acme ch12
 motorola xt1541
+canon powershot g7x
+canon powershot s120
 extra line
 EOF
 )
@@ -133,6 +135,7 @@ do {
 					printf %s "$emails" | while IFS= read -r onemail
 					do {
 					python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
+
 `cat $data/$filename.txt`"
 					} done
 					echo
