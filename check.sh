@@ -104,6 +104,9 @@ do {
 	grep -v "item_price" | \
 	sed "s/&nbsp;/ /g;s/[<>]/\n/g" | \
 	grep -i "eur")
+	
+	redirect2original=$(wget -qO- "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`" | sed "s/<div/\n<div/g;s/<\/div/\n<\/div/g;s/<a /\n<a /g" | grep "^<" | grep -B1 -m1 "item_price" | grep "target.*_blank.*href" | sed "s/\s/\n/g;s/\d034/\n/g" | grep "click\.php" | sed "s/^/salidzini.lv/;s/amp;//g")
+	reallink=$(wget -qO- "$redirect2original" | sed "s/^.*window.location..//g;s/.}.*$//g;s/amp;//g")
 
 	price=$(echo "$fullpricename" | sed "s/ .*$//g")
 	filename=$(echo "$item" | sed "s/ /\./g")
@@ -115,7 +118,7 @@ do {
 
 		#if the price has been already in log
 		if [ -f $data/$filename.txt ]; then
-			lowestprice=$(tail -1 $data/$filename.txt | sed "s/ eur//i;s/^.*\s//g")
+			lowestprice=$(tail -1 $data/$filename.txt | sed "s/ eur http.*$//i;s/^.*\s//g")
 			equal=$(awk 'BEGIN{ print "'$lowestprice'"=="'$price'" }')
 
 			#if item prise is not equal to the database then do the compare
@@ -130,7 +133,7 @@ do {
 				else
 					echo now $item price is $price
 					echo setting item into database..
-					echo $DATE $fullpricename>> $data/$filename.txt
+					echo $DATE $fullpricename $reallink>> $data/$filename.txt
 					emails=$(cat ../maintenance | sed '$aend of file')
 					printf %s "$emails" | while IFS= read -r onemail
 					do {
@@ -149,7 +152,7 @@ do {
 		else
 			echo now $item price is $price
 			echo setting item into database..
-			echo $DATE $fullpricename> $data/$filename.txt
+			echo $DATE $fullpricename $reallink> $data/$filename.txt
 			echo
 		fi
 
