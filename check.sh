@@ -133,13 +133,13 @@ do {
 				else
 					echo now $item price is $price
 					echo setting item into database..
-					echo $DATE $fullpricename $reallink >> $data/$filename.txt
+					echo $DATE $fullpricename $reallink>> $data/$filename.txt
 					emails=$(cat ../maintenance | sed '$aend of file')
 					printf %s "$emails" | while IFS= read -r onemail
 					do {
 					python ../send-email.py "$onemail" "$item" "https://www.salidzini.lv/search.php?q=`echo "$item" | sed "s/ /\+/g"`
 
-`cat $data/$filename.txt`"
+`sed "s/$/ /" $data/$filename.txt`"
 					} done
 					echo
 				fi
@@ -152,7 +152,7 @@ do {
 		else
 			echo now $item price is $price
 			echo setting item into database..
-			echo $DATE $fullpricename $reallink > $data/$filename.txt
+			echo $DATE $fullpricename $reallink> $data/$filename.txt
 			echo
 		fi
 
