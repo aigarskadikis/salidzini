@@ -133,7 +133,7 @@ do {
 				else
 					echo now $item price is $price
 					echo setting item into database..
-					echo $DATE $fullpricename $reallink>> $data/$filename.txt
+					echo $DATE $fullpricename $reallink >> $data/$filename.txt
 					emails=$(cat ../maintenance | sed '$aend of file')
 					printf %s "$emails" | while IFS= read -r onemail
 					do {
@@ -152,7 +152,7 @@ do {
 		else
 			echo now $item price is $price
 			echo setting item into database..
-			echo $DATE $fullpricename $reallink> $data/$filename.txt
+			echo $DATE $fullpricename $reallink > $data/$filename.txt
 			echo
 		fi
 
